@@ -37,6 +37,7 @@ library(knitr)
 library(ggridges)
 library(viridis)
 library(readr)
+
 # reading data
 advancedstatistics <- read.csv("advancedstatistics.csv", sep=",", fileEncoding="UTF-8")
 colnames(advancedstatistics)[c(6, 8, 9, 10, 12, 13, 14:19, 23, 27)] <- c("G" ,"PER", "TS%", "3PAr", "ORB%", "DRB%", "TRB%", "AST%", "VORP",
