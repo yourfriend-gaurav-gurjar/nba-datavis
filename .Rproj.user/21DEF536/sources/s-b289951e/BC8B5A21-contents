@@ -1,0 +1,72 @@
+---
+title: "**An EDA of the GOAT Debate: LeBron James Vs. Michael Jordan.**"
+author : "Ryan Longo"
+output:
+  html_document:
+    toc: yes
+    number_sections: yes
+    code_folding: hide
+    theme: cosmo
+    highlight: tango
+--- 
+
+![](https://image-cdn.essentiallysports.com/wp-content/uploads/20200720192913/MJ-and-LBJ-1.jpg)
+<p style="font-family: times, serif; font-size:13pt; font-style:italic">
+"The debates can happen. Y’all can talk about it. I’ll talk about it with my guys when we at home, our friends and all that stuff. But I’m not going to give it to y’all. I’m not going to do it. I’m not going to fall for it. You guys know how much I love Michael Jordan. I wear the number 23 because of Michael Jordan. When I first got my first pair of Jordans, you couldn’t tell me nothing. So, y’all can do the debates. Y’all can figure that out.” 
+<div style="text-align: right">
+**Lebron James** </div>
+
+# **Let's begin...**
+
+What is a GOAT? GOAT is the term denoting the "Greatest of all Time," and few are lucky enough to be classified as one. I (along with the majority of the NBA fanbase) believe that the argument has come down to two players: LeBron James and Michael Jordan. This EDA will put their respective careers in the limelight, and show if either player has accomplished enough to be crowned the GOAT.
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+```{r, warning = FALSE, message=FALSE}
+# loading libraries
+library(tidyverse)
+library(gganimate)
+library(grid)
+library(ggpubr)
+library(plotly)
+library(knitr)
+library(ggridges)
+library(viridis)
+library(readr)
+# reading data
+advancedstatistics <- read.csv("advancedstatistics.csv", sep=",", fileEncoding="UTF-8")
+colnames(advancedstatistics)[c(6, 8, 9, 10, 12, 13, 14:19, 23, 27)] <- c("G" ,"PER", "TS%", "3PAr", "ORB%", "DRB%", "TRB%", "AST%", "VORP",
+                                                           "STL%", "BLK%", "TOV%", "USG%", "WS/48")
+
+stats_per_game <- read.csv("stats_per_game.csv", sep=",", fileEncoding="UTF-8")
+colnames(stats_per_game)[c(11:18, 21)] <- c("FG%", "3P", "3PA", "3P%", "2P",
+                                            "2PA", "2P%", "eFG%", "FT%")
+
+totalstats <- read.csv("totalstats.csv", sep=",", fileEncoding="UTF-8")
+colnames(totalstats)[c(11:18, 21)] <- c("FG%", "3P", "3PA", "3P%", "2P", "2PA", "2P%", "eFG%", "FT%")
+
+all_games <- read_csv("all_games.csv")
+colnames(all_games)[c(26, 20, 21, 28, 29)] <- c("PTS", "TRB", "AST", "Player", "RSorPO")
+```
+
+```{r}
+all_games %>%
+  select(PTS, TRB, AST, Player, RSorPO) %>%
+  rename(Assists=AST,
+         Points=PTS,
+         Rebounds=TRB) %>%
+  gather(Stats, Value, 1:3) %>%
+  ggplot(aes(x=Value, fill=Stats)) +
+  geom_histogram(stat="count") +
+  xlim(0, 60) +
+  facet_grid(Player ~ .) +
+  labs(title="All-Time career stats", subtitle="Points, Rebounds and Assists", y="Count") +
+  theme_bw() +
+  theme(legend.position="bottom",
+        axis.title.x=element_blank(),
+        legend.title=element_blank())
+```
